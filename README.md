@@ -1,5 +1,7 @@
 # 📊 No-Code Data Analyzer
-
+## 🌐 Live Application
+Access the deployed app directly in your browser:  
+👉 **[No-Code Data Analyzer Live App](https://no-code-data-analyzer-fcnscyptansdispiltbshj.streamlit.app/)**
 A user-friendly, interactive Streamlit web application designed for non-technical users to clean, explore, analyze, and export raw data without writing a single line of code.
 
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
