@@ -111,31 +111,19 @@ if uploaded_file is not None:
         # TAB 3: FILTER & EXPORT
         with tab_filter:
             st.subheader("Filter and Download Cleaned Data")
+            
             filter_col = st.selectbox("Choose column to filter by", options=["None"] + list(df.columns))
             filtered_df = df.copy()
 
             if filter_col != "None":
-                # Use pandas type checker rather than strict string matching
-                if pd.api.types.is_numeric_dtype(df[filter_col]):
-                    valid_series = df[filter_col].dropna()
-                    
-                    if not valid_series.empty:
-                        min_val = float(valid_series.min())
-                        max_val = float(valid_series.max())
-                        
-                        if min_val == max_val:
-                            st.info(f"All values in **{filter_col}** are equal to `{min_val}`.")
-                        else:
-                            selected_range = st.slider("Select numerical range", min_val, max_val, (min_val, max_val))
-                            filtered_df = df[(df[filter_col] >= selected_range[0]) & (df[filter_col] <= selected_range[1])]
-                    else:
-                        st.warning(f"Column **{filter_col}** has no numeric values to filter.")
-                else:
-                    # Treat non-numeric columns (text/categorical/dates) with multiselect
-                    options = list(df[filter_col].dropna().unique())
-                    selected_vals = st.multiselect("Select values to keep", options=options)
+                if df[filter_col].dtype == 'object' or df[filter_col].dtype == 'category':
+                    selected_vals = st.multiselect("Select values to keep", options=df[filter_col].unique())
                     if selected_vals:
                         filtered_df = df[df[filter_col].isin(selected_vals)]
+                else:
+                    min_val, max_val = float(df[filter_col].min()), float(df[filter_col].max())
+                    selected_range = st.slider("Select numerical range", min_val, max_val, (min_val, max_val))
+                    filtered_df = df[(df[filter_col] >= selected_range[0]) & (df[filter_col] <= selected_range[1])]
 
             st.dataframe(filtered_df, use_container_width=True)
 
